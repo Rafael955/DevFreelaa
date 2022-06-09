@@ -26,7 +26,7 @@ namespace DevFreela.Core.Entities
 
         public DateTime CreatedAt { get; private set; }
 
-        public bool Active { get; set; }
+        public bool Active { get; private set; }
 
 
         public List<UserSkill> Skills { get; private set; }
@@ -34,5 +34,23 @@ namespace DevFreela.Core.Entities
         public List<Project> OwnedProjects { get; private set; }
 
         public List<Project> FreelanceProjects { get; private set; }
+
+
+        public void ActiveUser()
+        {
+            Active = true;
+        }
+
+        public void DeactiveUser()
+        {
+            Active = false;
+        }
+
+        public void Update(string fullname, string email, DateTime birthdate)
+        {
+            Fullname = fullname;
+            Email = email;
+            BirthDate = birthdate;
+        }
     }
 }

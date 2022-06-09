@@ -55,7 +55,8 @@ namespace DevFreela.Application.Services.Implementations
             var projects = _dbContext.Projects;
 
             var projectsViewModel = projects
-                .Select(x => new ProjectViewModel(x.Title, x.CreatedAt))
+                .Where(x => x.Title.Contains(query))
+                .Select(x => new ProjectViewModel(x.Id, x.Title, x.CreatedAt))
                 .ToList();
 
             return projectsViewModel;

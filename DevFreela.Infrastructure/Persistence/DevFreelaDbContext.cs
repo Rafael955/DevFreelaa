@@ -41,5 +41,7 @@ namespace DevFreela.Infrastructure.Persistence
 
         public List<Skill> Skills { get; set; }
 
+        public List<UserLogin> UsersLogin { get; set; }
+
     }
 }

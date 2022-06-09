@@ -26,6 +26,7 @@ namespace DevFreela.Application.Services.Interfaces
 
         void Finish(int id);
     }
-
-    // Obs¹: Evitar reutilizar o mesmo InputModel para outras funcionalidades. Ex: Não reutilizar o NewProjectViewModel do Create no método de Update pois é possível ter campos em NewProjectInputModel que não poderão ser atualizados
 }
+
+// Obs¹: Evitar reutilizar o mesmo InputModel para outras funcionalidades. Ex: Não reutilizar o NewProjectViewModel do Create no método de Update pois é possível ter campos em NewProjectInputModel que não poderão ser atualizados
+

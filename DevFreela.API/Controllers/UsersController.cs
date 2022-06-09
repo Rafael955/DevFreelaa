@@ -1,4 +1,6 @@
 ﻿using DevFreela.API.Models;
+using DevFreela.Application.InputModels;
+using DevFreela.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,6 +14,15 @@ namespace DevFreela.API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+        private readonly IUserService _userService;
+        private readonly IUserLoginService _loginService;
+        
+        public UsersController(IUserService userService, IUserLoginService loginService)
+        {
+            _userService = userService;
+            _loginService = loginService;
+        }
+
         // api/users/1
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
@@ -28,8 +39,15 @@ namespace DevFreela.API.Controllers
 
         // api/users/1/login
         [HttpPut("{id:int}/login")]
-        public IActionResult Login(int id, [FromBody] LoginModel login)
+        public IActionResult Login(int id, [FromBody] UserLoginInputModel login)
         {
+            var user = _userService.GetById(id);
+
+            if (user == null)
+                return NotFound("Usuário não existe");
+
+            _loginService.Login(login);
+
             return NoContent();
         }
     }

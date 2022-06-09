@@ -20,7 +20,7 @@ namespace DevFreela.Application.ViewModels
 
         public string Description { get; private set; }
 
-        public decimal? TotalCost { get; set; }
+        public decimal? TotalCost { get; private set; }
 
         public DateTime? StartedAt { get; private set; }
 
