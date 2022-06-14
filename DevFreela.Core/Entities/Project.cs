@@ -24,7 +24,11 @@ namespace DevFreela.Core.Entities
 
         public int IdClient { get; private set; }
 
+        public virtual User Client { get; private set; }
+
         public int IdFreelancer { get; private set; }
+
+        public virtual User Freelancer { get; private set; }
 
         public decimal? TotalCost { get; private set; }
 

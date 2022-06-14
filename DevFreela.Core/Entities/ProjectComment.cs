@@ -17,7 +17,11 @@ namespace DevFreela.Core.Entities
 
         public int IdProject { get; private set; }
 
+        public virtual Project Project { get; private set; }
+
         public int IdUser { get; private set; }
+
+        public virtual User User { get; private set; }
 
         public DateTime CreatedAt { get; private set; }
     }

@@ -32,8 +32,9 @@ namespace DevFreela.API.Controllers
 
         // api/users
         [HttpPost]
-        public IActionResult Post([FromBody] CreateUserModel user) 
+        public IActionResult Post([FromBody] NewUserInputModel user) 
         {
+            _userService.Create(user);
             return CreatedAtAction(nameof(GetById), new { Id = 1 }, user);
         }
 

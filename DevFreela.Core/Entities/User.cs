@@ -24,10 +24,15 @@ namespace DevFreela.Core.Entities
 
         public DateTime BirthDate { get; private set; }
 
+        public int UserLoginId { get; private set; }
+
+        public virtual UserLogin UserLogin { get; private set; }
+
         public DateTime CreatedAt { get; private set; }
 
         public bool Active { get; private set; }
 
+        public List<ProjectComment> Comments { get; private set; }
 
         public List<UserSkill> Skills { get; private set; }
 
