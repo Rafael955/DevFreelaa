@@ -11,6 +11,10 @@ namespace DevFreela.Infrastructure.Persistence.Configurations
             builder.HasKey(x => x.Id);
 
             builder
+                .Property(x => x.Content)
+                .HasMaxLength(150);
+
+            builder
                 .HasOne(p => p.Project)
                 .WithMany(p => p.Comments)
                 .HasForeignKey(p => p.IdProject);
