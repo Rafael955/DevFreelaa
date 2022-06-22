@@ -23,6 +23,10 @@ namespace DevFreela.Infrastructure.Persistence.Configurations
             builder
                 .Property(x => x.BirthDate)
                 .IsRequired();
+            
+            builder
+               .Property(x => x.UserLoginId)
+               .IsRequired(false);
 
             builder
                 .HasMany(x => x.Skills)
@@ -34,6 +38,7 @@ namespace DevFreela.Infrastructure.Persistence.Configurations
                 .HasOne(x => x.UserLogin)
                 .WithOne()
                 .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }

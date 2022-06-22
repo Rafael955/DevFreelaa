@@ -24,7 +24,7 @@ namespace DevFreela.Core.Entities
 
         public DateTime BirthDate { get; private set; }
 
-        public int UserLoginId { get; private set; }
+        public int? UserLoginId { get; private set; }
 
         public virtual UserLogin UserLogin { get; private set; }
 

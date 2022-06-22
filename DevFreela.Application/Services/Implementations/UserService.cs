@@ -21,6 +21,7 @@ namespace DevFreela.Application.Services.Implementations
         {
             var user = new User(inputModel.Fullname, inputModel.Email, inputModel.BirthDate);
             _dbContext.Users.Add(user);
+            _dbContext.SaveChanges();
 
             return user.Id;
         }
@@ -29,8 +30,11 @@ namespace DevFreela.Application.Services.Implementations
         {
             var user = _dbContext.Users.FirstOrDefault(x => x.Id == id);
 
-            if(user != null)
+            if (user != null)
+            {
                 _dbContext.Users.Remove(user);
+                _dbContext.SaveChanges();
+            }
         }
 
         public List<UserViewModel> GetAll(string query)
@@ -46,7 +50,7 @@ namespace DevFreela.Application.Services.Implementations
         {
             var user = _dbContext.Users.FirstOrDefault(x => x.Id == id);
 
-            if(user != null)
+            if (user != null)
             {
                 var userViewModel = new UserDetailsViewModel(user.Fullname, user.Email, user.BirthDate, user.CreatedAt, user.Active);
                 return userViewModel;
@@ -59,60 +63,13 @@ namespace DevFreela.Application.Services.Implementations
         {
             var userToUpdate = _dbContext.Users.FirstOrDefault(x => x.Id == inputModel.Id);
 
-            //Simulando Update em uma base de dados
-            userToUpdate.Update(inputModel.Fullname, inputModel.Email, inputModel.BirthDate);
-        }
-    }
-
-    public class UserLoginService : IUserLoginService
-    {
-        private readonly DevFreelaDbContext _dbContext;
-
-        public UserLoginService(DevFreelaDbContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
-
-        public UserLoginViewModel GetByUsername(UserLoginInputModel user)
-        {
-            var userLogin = _dbContext.UsersLogin.FirstOrDefault(x => x.Username == user.Username);
-
-            UserLoginViewModel userLoginViewModel = null;
-
-            if (userLogin != null)
-                userLoginViewModel = new UserLoginViewModel(userLogin.Username, userLogin.Password, userLogin.Email, userLogin.isLogged);
-
-            return userLoginViewModel;
-        }
-
-        public bool Login(UserLoginInputModel inputModel)
-        {
-            var userLogin = _dbContext.UsersLogin.FirstOrDefault(x => x.Username == inputModel.Username && inputModel.Password == inputModel.Password);
-
-            if (userLogin == null)
-                return false;
-
-            if (userLogin.isLogged)
-                return false;
-
-            userLogin.Login();
-
-            return true;
-        }
-
-        public bool Logoff(UserLoginInputModel inputModel)
-        {
-            var userLogin = _dbContext.UsersLogin.FirstOrDefault(x => x.Username == inputModel.Username && inputModel.Password == inputModel.Password);
-
-            if (userLogin == null)
-                return false;
-
-            if (userLogin.isLogged)
-                return false;
-
-            userLogin.Logoff();
-
-            return true;
+            if (userToUpdate != null)
+            {
+                userToUpdate.Update(inputModel.Fullname, inputModel.Email, inputModel.BirthDate);
+                
+                _dbContext.Users.Update(userToUpdate);
+                _dbContext.SaveChanges();
+            }
         }
     }
 }
