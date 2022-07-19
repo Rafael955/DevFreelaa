@@ -31,6 +31,7 @@ namespace DevFreela.Application.Services.Implementations
             var project = new Project(inputModel.Title, inputModel.Description, inputModel.IdClient, inputModel.IdFreelancer, inputModel.TotalCost);
 
             _dbContext.Projects.Add(project);
+            _dbContext.SaveChanges();
 
             return project.Id;
         }
@@ -57,6 +58,15 @@ namespace DevFreela.Application.Services.Implementations
             var projectToFinish = _dbContext.Projects.SingleOrDefault(x => x.Id == id);
 
             projectToFinish.Finish();
+
+            using (var sqlConn = new SqlConnection())
+            {
+                sqlConn.Open();
+
+                var script = "UPDATE Projects SET Status = @status, FinishedAt = @finishedAt WHERE Id = @id";
+
+                sqlConn.Execute(script, new { status = projectToFinish.Status, finishedAt = projectToFinish.FinishedAt, id });
+            }
 
             _dbContext.SaveChanges();
         }
@@ -120,7 +130,7 @@ namespace DevFreela.Application.Services.Implementations
 
                 var script = "UPDATE Projects SET Status = @status, StartedAt = @startedAt WHERE Id = @id";
 
-                sqlConn.Execute(script, new { status = projectToStart.Status, startedat = projectToStart.StartedAt, id });
+                sqlConn.Execute(script, new { status = projectToStart.Status, startedAt = projectToStart.StartedAt, id });
             }
 
             //Entity Framework
