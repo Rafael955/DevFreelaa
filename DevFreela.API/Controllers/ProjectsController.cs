@@ -1,6 +1,8 @@
 ﻿using DevFreela.Application.Commands.Project;
+using DevFreela.Application.Commands.Projects;
 using DevFreela.Application.Queries;
 using DevFreela.Application.Services.Interfaces;
+using DevFreela.Application.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -11,17 +13,17 @@ namespace DevFreela.API.Controllers
     [ApiController]
     public class ProjectsController : ControllerBase
     {
-        private readonly IProjectService _service;
+        //private readonly IProjectService _service;
         private readonly IMediator _mediator;
 
-        public ProjectsController(IProjectService service, IMediator mediator)
+        public ProjectsController(IMediator mediator)
         {
-            _service = service;
+           //_service = service;
             _mediator = mediator;
         }
 
         // api/projects?query=net core
-        [HttpGet()]
+        [HttpGet]
         public IActionResult Get(string query)
         {
             var _query = new GetAllProjectsQuery(query);
@@ -91,11 +93,15 @@ namespace DevFreela.API.Controllers
             return NoContent();
         }
 
-        // api/projects/1/comments POST
-        [HttpPost("{id:int}/comments")]
+        // api/projects/1/create-comment POST
+        [HttpPost("{id:int}/create-comment")]
         public async Task<IActionResult> PostComment(int id, [FromBody] CreateCommentCommand command)
         {
-            //_service.CreateComment(comment);
+            var project = await GetProject(id);
+
+            if (project == null)
+                NotFound("Projeto não foi encontrado. Não será possível adicionar comentário!");
+
             await _mediator.Send(command);
 
             return NoContent();
@@ -105,7 +111,8 @@ namespace DevFreela.API.Controllers
         [HttpPut("{id:int}/start")]
         public IActionResult Start(int id)
         {
-            _service.Start(id);
+            var startProject = new StartProjectCommand(id);
+            _mediator.Send(startProject);
 
             return NoContent();
         }
@@ -114,9 +121,22 @@ namespace DevFreela.API.Controllers
         [HttpPut("{id:int}/finish")]
         public IActionResult Finish(int id)
         {
-            _service.Finish(id);
+            var finishProject = new FinishProjectCommand(id);
+            _mediator.Send(finishProject);
 
             return NoContent();
+        }
+
+        private async Task<ProjectDetailsViewModel> GetProject(int id)
+        {
+            // Buscar o projeto
+            var query = new GetProjectByIdQuery(id);
+            var project = await _mediator.Send(query);
+
+            if (project == null)
+                return null;
+
+            return project;
         }
     }
 }
