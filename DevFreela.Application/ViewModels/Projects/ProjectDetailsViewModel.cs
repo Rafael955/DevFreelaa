@@ -4,14 +4,14 @@ namespace DevFreela.Application.ViewModels
 {
     public class ProjectDetailsViewModel
     {
-        public ProjectDetailsViewModel(int id, string title, string description, decimal? totalCost, DateTime? startedAt, DateTime? myProperty, string clientFullName, string freelancerFullName)
+        public ProjectDetailsViewModel(int id, string title, string description, decimal? totalCost, DateTime? startedAt, DateTime? finishedAt, string clientFullName, string freelancerFullName)
         {
             Id = id;
             Title = title;
             Description = description;
             TotalCost = totalCost;
             StartedAt = startedAt;
-            FinishedAt = myProperty;
+            FinishedAt = finishedAt;
             ClientFullName = clientFullName;
             FreelancerFullName = freelancerFullName;
         }
