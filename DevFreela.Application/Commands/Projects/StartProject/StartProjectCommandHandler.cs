@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using DevFreela.Core.Repositories;
 using DevFreela.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.Data.SqlClient;
@@ -10,29 +11,20 @@ namespace DevFreela.Application.Commands.Projects
 {
     public class StartProjectCommandHandler : IRequestHandler<StartProjectCommand, Unit>
     {
-        private readonly DevFreelaDbContext _dbContext;
+        private readonly IProjectRepository _repository;
 
-        public StartProjectCommandHandler(DevFreelaDbContext dbContext)
+        public StartProjectCommandHandler(IProjectRepository repository)
         {
-            dbContext = _dbContext;
+            _repository = repository;
         }
 
         public async Task<Unit> Handle(StartProjectCommand request, CancellationToken cancellationToken)
         {
-            //Dapper
-            var projectToStart = _dbContext.Projects.SingleOrDefault(x => x.Id == request.Id);
+            var projectToStart = (await _repository.GetAllAsync()).SingleOrDefault(x => x.Id == request.Id);
 
             projectToStart.Start();
 
-            using (var sqlConn = new SqlConnection())
-            {
-                sqlConn.Open();
-
-                var script = "UPDATE Projects SET Status = @status, StartedAt = @startedAt WHERE Id = @id";
-
-                await sqlConn.ExecuteAsync(script, new { status = projectToStart.Status, startedAt = projectToStart.StartedAt, request.Id });
-                await _dbContext.SaveChangesAsync();
-            }
+            await _repository.StartProjectAsync(projectToStart);
 
             return Unit.Value;
         }

@@ -21,10 +21,12 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<Project>> GetAllAsync(string query)
+        public async Task<List<Project>> GetAllAsync(string query = null)
         {
-            return await _dbContext.Projects.Where(x => x.Title.Contains(query))
-                .ToListAsync();
+            if(query == null)
+                return await _dbContext.Projects.ToListAsync();
+            else
+                return await _dbContext.Projects.Where(x => x.Title.Contains(query)).ToListAsync();
         }
 
         public async Task<ProjectDetailsDTO> GetByIdAsync(int id)
@@ -53,6 +55,38 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
         {
             await _dbContext.ProjectComments.AddAsync(comment);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteProjectAsync(Project project)
+        {
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task FinishProjectAsync(Project project)
+        {
+            //Dapper
+            using (var sqlConn = new SqlConnection())
+            {
+                sqlConn.Open();
+
+                var script = "UPDATE Projects SET Status = @status, FinishedAt = @finishedAt WHERE Id = @id";
+
+                await sqlConn.ExecuteAsync(script, new { status = project.Status, finishedAt = project.FinishedAt, project.Id });
+                await _dbContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task StartProjectAsync(Project project)
+        {
+            using (var sqlConn = new SqlConnection())
+            {
+                sqlConn.Open();
+
+                var script = "UPDATE Projects SET Status = @status, StartedAt = @startedAt WHERE Id = @id";
+
+                await sqlConn.ExecuteAsync(script, new { status = project.Status, startedAt = project.StartedAt, project.Id });
+                await _dbContext.SaveChangesAsync();
+            }
         }
     }
 }

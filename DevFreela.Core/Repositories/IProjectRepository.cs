@@ -10,12 +10,18 @@ namespace DevFreela.Core.Repositories
 {
     public interface IProjectRepository
     {
-        Task<List<Project>> GetAllAsync(string query);
+        Task<List<Project>> GetAllAsync(string query = null);
 
         Task<ProjectDetailsDTO> GetByIdAsync(int id);
 
         Task<int> CreateProjectAsync(Project project);
 
         Task CreateCommentAsync(ProjectComment comment);
+
+        Task DeleteProjectAsync(Project project);
+
+        Task StartProjectAsync(Project project);
+
+        Task FinishProjectAsync(Project project);
     }
 }
