@@ -1,8 +1,10 @@
 using DevFreela.API.Models;
-using DevFreela.Application.Commands.CreateProject;
+using DevFreela.Application.Commands.Project;
 using DevFreela.Application.Services.Implementations;
 using DevFreela.Application.Services.Interfaces;
+using DevFreela.Core.Repositories;
 using DevFreela.Infrastructure.Persistence;
+using DevFreela.Infrastructure.Persistence.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -38,13 +40,16 @@ namespace DevFreela.API
             var connectionString = Configuration.GetConnectionString("DevFreelaCs");
             services.AddDbContext<DevFreelaDbContext>(options => options.UseSqlServer(connectionString));
 
-            services.AddScoped<IProjectService, ProjectService>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IUserLoginService, UserLoginService>();
+            //services.AddScoped<IProjectService, ProjectService>();
+            //services.AddScoped<IUserService, UserService>();
+            //services.AddScoped<IUserLoginService, UserLoginService>();
+
+            services.AddScoped<IProjectRepository, ProjectRepository>();
+            services.AddScoped<ISkillRepository, SkillRepository>();
 
             services.AddControllers();
 
-            services.AddMediatR(typeof(CreateProjectCommand));
+            services.AddMediatR(typeof(CreateProjectCommand)); //Pega todas as classes do Assembly(Projeto) que implementem o que o Mediator especifica como sendo o padrão CQRS
 
             services.AddSwaggerGen(c =>
             {
