@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DevFreela.Application.Queries.GetUserById
+namespace DevFreela.Application.Queries
 {
     public class GetUserByIdQuery : IRequest<UserDetailsViewModel>
     {

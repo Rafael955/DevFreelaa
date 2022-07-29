@@ -4,6 +4,7 @@ using DevFreela.Core.Entities;
 using DevFreela.Core.Repositories;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +16,12 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
     public class ProjectRepository : IProjectRepository
     {
         private readonly DevFreelaDbContext _dbContext;
+        private readonly string _connectionString;
 
-        public ProjectRepository(DevFreelaDbContext dbContext)
+        public ProjectRepository(DevFreelaDbContext dbContext, IConfiguration configuration)
         {
             _dbContext = dbContext;
+            _connectionString = configuration.GetConnectionString("DevFreelaCs");
         }
 
         public async Task<List<Project>> GetAllAsync(string query = null)
@@ -31,7 +34,8 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
 
         public async Task<ProjectDetailsDTO> GetByIdAsync(int id)
         {
-            using (var conn = new SqlConnection())
+            //dapper
+            using (var conn = new SqlConnection(_connectionString))
             {
                 await conn.OpenAsync();
 
@@ -65,7 +69,7 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
         public async Task FinishProjectAsync(Project project)
         {
             //Dapper
-            using (var sqlConn = new SqlConnection())
+            using (var sqlConn = new SqlConnection(_connectionString))
             {
                 sqlConn.Open();
 
@@ -78,7 +82,8 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
 
         public async Task StartProjectAsync(Project project)
         {
-            using (var sqlConn = new SqlConnection())
+            //Dapper
+            using (var sqlConn = new SqlConnection(_connectionString))
             {
                 sqlConn.Open();
 
@@ -87,6 +92,13 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
                 await sqlConn.ExecuteAsync(script, new { status = project.Status, startedAt = project.StartedAt, project.Id });
                 await _dbContext.SaveChangesAsync();
             }
+        }
+
+        public async Task UpdateProjectAsync(Project project)
+        {
+            _dbContext.Entry(project).State = EntityState.Modified;
+
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

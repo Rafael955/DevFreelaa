@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DevFreela.Application.Queries.GetUserById
+namespace DevFreela.Application.Queries
 {
     public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, UserDetailsViewModel>
     {
