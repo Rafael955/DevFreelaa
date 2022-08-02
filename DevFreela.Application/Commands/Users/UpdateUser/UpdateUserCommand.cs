@@ -7,20 +7,20 @@ namespace DevFreela.Application.Commands.Users.UpdateUser
 {
     public class UpdateUserCommand : IRequest<Unit>
     {
-        public UpdateUserCommand(int id, string title, string description, decimal totalCost)
+        public UpdateUserCommand(int id, string fullname, string email, DateTime birthdate)
         {
             Id = id;
-            Title = title;
-            Description = description;
-            TotalCost = totalCost;
+            Fullname = fullname;
+            Email = email;
+            BirthDate = birthdate;
         }
 
         public int Id { get; private set; }
 
-        public string Title { get; private set; }
+        public string Fullname { get; private set; }
 
-        public string Description { get; private set; }
+        public string Email { get; private set; }
 
-        public decimal TotalCost { get; private set; }
+        public DateTime BirthDate { get; private set; }
     }
 }

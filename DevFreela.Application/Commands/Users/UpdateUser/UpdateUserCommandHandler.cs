@@ -1,4 +1,5 @@
-﻿using DevFreela.Infrastructure.Persistence;
+﻿using DevFreela.Core.Repositories;
+using DevFreela.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -9,23 +10,22 @@ namespace DevFreela.Application.Commands.Users.UpdateUser
 {
     public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Unit>
     {
-        private readonly DevFreelaDbContext _dbContext;
+        private readonly IUserRepository _repository;
 
-        public UpdateUserCommandHandler(DevFreelaDbContext dbContext)
+        public UpdateUserCommandHandler(IUserRepository repository)
         {
-            _dbContext = dbContext;
+            _repository = repository;
         }
 
         public async Task<Unit> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
-            var projectToUpdate = _dbContext.Projects.SingleOrDefault(x => x.Id == request.Id);
+            var projectToUpdate = await _repository.GetByIdAsync(request.Id);
 
             if (projectToUpdate != null)
             {
-                projectToUpdate.Update(request.Title, request.Description, request.TotalCost);
+                projectToUpdate.Update(request.Fullname, request.Email, request.BirthDate);
 
-                _dbContext.Entry(projectToUpdate).State = EntityState.Modified;
-                await _dbContext.SaveChangesAsync();
+                await _repository.UpdateUserAsync(projectToUpdate);
             }
 
             return Unit.Value;

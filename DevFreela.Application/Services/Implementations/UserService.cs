@@ -37,6 +37,19 @@ namespace DevFreela.Application.Services.Implementations
             }
         }
 
+        public void Update(UpdateUserInputModel inputModel)
+        {
+            var userToUpdate = _dbContext.Users.FirstOrDefault(x => x.Id == inputModel.Id);
+
+            if (userToUpdate != null)
+            {
+                userToUpdate.Update(inputModel.Fullname, inputModel.Email, inputModel.BirthDate);
+
+                _dbContext.Users.Update(userToUpdate);
+                _dbContext.SaveChanges();
+            }
+        }
+
         public List<UserViewModel> GetAll(string query)
         {
             var users = _dbContext.Users;
@@ -48,7 +61,7 @@ namespace DevFreela.Application.Services.Implementations
 
         public UserDetailsViewModel GetById(int id)
         {
-            var user = _dbContext.Users.FirstOrDefault(x => x.Id == id);
+            var user = _dbContext.Users.SingleOrDefault(x => x.Id == id);
 
             if (user != null)
             {
@@ -57,19 +70,6 @@ namespace DevFreela.Application.Services.Implementations
             }
 
             return null;
-        }
-
-        public void Update(UpdateUserInputModel inputModel)
-        {
-            var userToUpdate = _dbContext.Users.FirstOrDefault(x => x.Id == inputModel.Id);
-
-            if (userToUpdate != null)
-            {
-                userToUpdate.Update(inputModel.Fullname, inputModel.Email, inputModel.BirthDate);
-                
-                _dbContext.Users.Update(userToUpdate);
-                _dbContext.SaveChanges();
-            }
         }
     }
 }
