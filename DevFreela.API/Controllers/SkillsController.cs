@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace DevFreela.API.Controllers
 {
+    [Route("api/users")]
+    [ApiController]
     public class SkillsController : ControllerBase
     {
         private readonly IMediator _mediator;

@@ -5,6 +5,7 @@ using DevFreela.Application.Services.Interfaces;
 using DevFreela.Application.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DevFreela.API.Controllers
@@ -50,9 +51,14 @@ namespace DevFreela.API.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> Post([FromBody] CreateProjectCommand command)
         {
-            if (command.Title.Length > 50)
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                var messages = ModelState
+                    .SelectMany(x => x.Value.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+
+                return BadRequest(messages);
             }
 
             var id = await _mediator.Send(command);
@@ -69,7 +75,14 @@ namespace DevFreela.API.Controllers
                 return BadRequest();
             }
 
-            var command = new UpdateProjectCommand(id, project.Title, project.Description, project.TotalCost);
+            var command = new UpdateProjectCommand
+            {
+                Id = id,
+                Title = project.Title,
+                Description = project.Description,
+                TotalCost = project.TotalCost
+            };
+
             _mediator.Send(command);
 
             //Atualizo o objeto

@@ -2,9 +2,11 @@ using DevFreela.API.Models;
 using DevFreela.Application.Commands.Project;
 using DevFreela.Application.Services.Implementations;
 using DevFreela.Application.Services.Interfaces;
+using DevFreela.Application.Validations;
 using DevFreela.Core.Repositories;
 using DevFreela.Infrastructure.Persistence;
 using DevFreela.Infrastructure.Persistence.Repositories;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -46,8 +48,14 @@ namespace DevFreela.API
 
             services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<ISkillRepository, SkillRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
-            services.AddControllers();
+            //maneira antiga
+            services.AddControllers()
+                .AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<NewUserCommandValidator>());
+
+            //nova maneira
+            //services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 
             services.AddMediatR(typeof(CreateProjectCommand)); //Pega todas as classes do Assembly(Projeto) que implementem o que o Mediator especifica como sendo o padrão CQRS
 
