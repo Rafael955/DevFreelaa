@@ -21,8 +21,6 @@ namespace DevFreela.Infrastructure.Persistence
 
         public DbSet<Skill> Skills { get; set; }
 
-        public DbSet<UserLogin> UsersLogin { get; set; }
-
         public DbSet<UserSkill> UserSkills { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

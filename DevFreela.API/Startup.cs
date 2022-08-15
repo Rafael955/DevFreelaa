@@ -1,3 +1,4 @@
+using DevFreela.API.Filters;
 using DevFreela.API.Models;
 using DevFreela.Application.Commands.Project;
 using DevFreela.Application.Services.Implementations;
@@ -51,7 +52,7 @@ namespace DevFreela.API
             services.AddScoped<IUserRepository, UserRepository>();
 
             //maneira antiga
-            services.AddControllers()
+            services.AddControllers(options => options.Filters.Add(typeof(ValidationFilter)))
                 .AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<NewUserCommandValidator>());
 
             //nova maneira

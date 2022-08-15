@@ -25,19 +25,14 @@ namespace DevFreela.Infrastructure.Persistence.Configurations
                 .IsRequired();
             
             builder
-               .Property(x => x.UserLoginId)
-               .IsRequired(false);
+               .Property(x => x.Password)
+               .IsRequired();
 
             builder
                 .HasMany(x => x.Skills)
                 .WithOne()
                 .HasForeignKey(x => x.IdSkill)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            builder
-                .HasOne(x => x.UserLogin)
-                .WithOne()
-                .OnDelete(DeleteBehavior.Cascade);
 
         }
     }
