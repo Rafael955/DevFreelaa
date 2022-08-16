@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DevFreela.Application.Commands.Users.UpdateUser
+namespace DevFreela.Application.Commands.Users
 {
     public class UpdateUserCommand : IRequest<Unit>
     {

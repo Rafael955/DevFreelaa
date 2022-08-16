@@ -4,7 +4,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DevFreela.Application.Commands.Users.DeleteUser
+namespace DevFreela.Application.Commands.Users
 {
     public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, Unit>
     {

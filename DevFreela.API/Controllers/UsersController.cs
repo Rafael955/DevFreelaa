@@ -49,18 +49,16 @@ namespace DevFreela.API.Controllers
             return CreatedAtAction(nameof(GetById), new { Id = 1 }, user);
         }
 
-        // api/users/1/login
-        //[HttpPut("{id:int}/login")]
-        //public async Task<IActionResult> Login(int id, [FromBody] UserLoginInputModel login)
-        //{
-        //    var user = _userService.GetById(id);
+        // api/users/login
+        [HttpPut("login")]
+        public async Task<IActionResult> Login([FromBody] LoginUserCommand login)
+        {
+            var loginUserViewModel = await _mediator.Send(login);
 
-        //    if (user == null)
-        //        return NotFound("Usuário não existe");
-
-        //    _loginService.Login(login);
-
-        //    return NoContent();
-        //}
+            if (loginUserViewModel == null)
+                return BadRequest();
+            
+            return Ok(loginUserViewModel);
+        }
     }
 }

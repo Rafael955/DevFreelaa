@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DevFreela.Application.Commands.Users.DeleteUser
+namespace DevFreela.Application.Commands.Users
 {
     public class DeleteUserCommand : IRequest<Unit>
     {
