@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DevFreela.Application.Commands.Users
 {
-    public class NewUserCommand : IRequest<Unit>
+    public class NewUserCommand : IRequest<int>
     {
         public string Fullname { get; set; }
 
