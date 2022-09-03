@@ -24,9 +24,9 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
             _connectionString = configuration.GetConnectionString("DevFreelaCs");
         }
 
-        public async Task<List<Project>> GetAllAsync(string query = null)
+        public async Task<List<Project>> GetAllAsync(string query = "")
         {
-            if(query == null)
+            if(query == string.Empty)
                 return await _dbContext.Projects.ToListAsync();
             else
                 return await _dbContext.Projects.Where(x => x.Title.Contains(query)).ToListAsync();

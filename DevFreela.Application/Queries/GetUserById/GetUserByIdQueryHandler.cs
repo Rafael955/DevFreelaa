@@ -18,7 +18,7 @@ namespace DevFreela.Application.Queries
 
         public async Task<UserDetailsViewModel> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == request.Id);
+            var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.Id == request.Id);
 
             if (user != null)
             {
