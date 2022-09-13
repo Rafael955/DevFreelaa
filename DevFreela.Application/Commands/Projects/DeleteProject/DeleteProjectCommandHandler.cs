@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DevFreela.Core.Entities;
 
-namespace DevFreela.Application.Commands.Project
+namespace DevFreela.Application.Commands.Projects
 { 
     public class DeleteProjectCommandHandler : IRequestHandler<DeleteProjectCommand, Unit>
     {

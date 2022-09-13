@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DevFreela.Application.Commands.Project
+namespace DevFreela.Application.Commands.Projects
 {
     public class DeleteProjectCommand : IRequest<Unit>
     {

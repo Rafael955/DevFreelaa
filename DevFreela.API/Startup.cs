@@ -1,6 +1,6 @@
 using DevFreela.API.Filters;
 using DevFreela.API.Models;
-using DevFreela.Application.Commands.Project;
+using DevFreela.Application.Commands.Projects;
 using DevFreela.Application.Services.Implementations;
 using DevFreela.Application.Services.Interfaces;
 using DevFreela.Application.Validations;
@@ -47,6 +47,8 @@ namespace DevFreela.API
 
             var connectionString = Configuration.GetConnectionString("DevFreelaCs");
             services.AddDbContext<DevFreelaDbContext>(options => options.UseSqlServer(connectionString));
+
+            services.AddHttpClient();
 
             //services.AddScoped<IProjectService, ProjectService>();
             //services.AddScoped<IUserService, UserService>();

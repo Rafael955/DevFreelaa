@@ -6,7 +6,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DevFreela.Application.Commands.Project
+namespace DevFreela.Application.Commands.Projects
 {
     public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, int>
     {
