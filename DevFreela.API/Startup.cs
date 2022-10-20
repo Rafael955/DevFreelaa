@@ -1,3 +1,4 @@
+using DevFreela.API.Extensions;
 using DevFreela.API.Filters;
 using DevFreela.API.Models;
 using DevFreela.Application.Commands.Projects;
@@ -7,6 +8,7 @@ using DevFreela.Application.Validations;
 using DevFreela.Core.Repositories;
 using DevFreela.Core.Services;
 using DevFreela.Infrastructure.Auth;
+using DevFreela.Infrastructure.Payments;
 using DevFreela.Infrastructure.Persistence;
 using DevFreela.Infrastructure.Persistence.Repositories;
 using FluentValidation.AspNetCore;
@@ -54,14 +56,7 @@ namespace DevFreela.API
             //services.AddScoped<IUserService, UserService>();
             //services.AddScoped<IUserLoginService, UserLoginService>();
 
-            services.AddScoped<IProjectRepository, ProjectRepository>();
-            services.AddScoped<ISkillRepository, SkillRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IAuthService, AuthService>();
-
-            //maneira antiga
-            services.AddControllers(options => options.Filters.Add(typeof(ValidationFilter)))
-                .AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<NewUserCommandValidator>());
+            services.AddInfrastructure();
 
             //nova maneira
             //services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();

@@ -5,7 +5,13 @@ namespace DevFreela.Core.Entities
 {
     public class Project : BaseEntity
     {
-        public Project(string title, string description, int idClient, int idFreelancer, decimal? totalCost)
+        //construtor para o EF
+        public Project()
+        {
+
+        }
+
+        public Project(string title, string description, int idClient, int idFreelancer, decimal totalCost)
         {
             Title = title;
             Description = description;
@@ -30,7 +36,7 @@ namespace DevFreela.Core.Entities
 
         public virtual User Freelancer { get; private set; }
 
-        public decimal? TotalCost { get; private set; }
+        public decimal TotalCost { get; private set; }
 
         public DateTime CreatedAt { get; private set; }
         
@@ -40,7 +46,7 @@ namespace DevFreela.Core.Entities
 
         public ProjectStatusEnum Status { get; private set; }
 
-        public List<ProjectComment> Comments { get; private set; }
+        public virtual List<ProjectComment> Comments { get; private set; }
 
         public void Start()
         {

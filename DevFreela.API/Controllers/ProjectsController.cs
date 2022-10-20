@@ -3,6 +3,7 @@ using DevFreela.Application.Commands.Projects;
 using DevFreela.Application.Queries;
 using DevFreela.Application.Services.Interfaces;
 using DevFreela.Application.ViewModels;
+using DevFreela.Core.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -141,10 +142,20 @@ namespace DevFreela.API.Controllers
         // api/projects/1/finish
         [HttpPut("{id:int}/finish")]
         [Authorize(Roles = "client")]
-        public IActionResult Finish(int id)
+        public async Task<IActionResult> Finish(int id, [FromBody] FinishProjectCommand finishProjectCommand)
         {
-            var finishProject = new FinishProjectCommand(id);
-            _mediator.Send(finishProject);
+            var finishProject = new FinishProjectCommand();
+            
+            finishProject.Id = id;
+            finishProject.CreditCardNumber = finishProjectCommand.CreditCardNumber;
+            finishProject.Cvv = finishProjectCommand.Cvv;
+            finishProject.ExpiresAt = finishProjectCommand.ExpiresAt;
+            finishProject.Fullname = finishProjectCommand.Fullname;
+
+            var result = await _mediator.Send(finishProject);
+
+            if (result == System.Net.HttpStatusCode.BadRequest)
+                return BadRequest(new { message = "Erro ao finalizar projeto!" });
 
             return NoContent();
         }

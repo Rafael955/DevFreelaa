@@ -19,10 +19,10 @@ namespace DevFreela.Infrastructure.Payments
         public PaymentService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
-            _paymentsBaseUrl = configuration.GetSection("Services:Payments").ToString();
+            _paymentsBaseUrl = configuration.GetSection("Services:Payments").Value;
         }
 
-        public async Task<bool> ProcessPayment(PaymentInfoDTO paymentInfoDTO)
+        public async void ProcessPayment(PaymentInfoDTO paymentInfoDTO)
         {
             var url = $"{_paymentsBaseUrl}/api/payments";
             
@@ -32,9 +32,7 @@ namespace DevFreela.Infrastructure.Payments
 
             var httpClient = _httpClientFactory.CreateClient("Payments");
 
-            var response = await httpClient.PostAsync(url, paymentInfoContent);
-
-            return response.IsSuccessStatusCode;
+            await httpClient.PostAsync(url, paymentInfoContent);
         }
     }
 }

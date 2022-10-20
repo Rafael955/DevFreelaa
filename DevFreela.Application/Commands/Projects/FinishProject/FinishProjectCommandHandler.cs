@@ -5,13 +5,17 @@ using DevFreela.Core.Services;
 using DevFreela.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.Data.SqlClient;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DevFreela.Core.Entities;
+using DevFreela.Application.Queries;
+using System.Net;
 
 namespace DevFreela.Application.Commands.Projects
 {
-    public class FinishProjectCommandHandler : IRequestHandler<FinishProjectCommand, Unit>
+    public class FinishProjectCommandHandler : IRequestHandler<FinishProjectCommand, HttpStatusCode>
     {
         private readonly IProjectRepository _repository;
         private readonly IPaymentService _paymentService;
@@ -22,9 +26,12 @@ namespace DevFreela.Application.Commands.Projects
             _paymentService = paymentService;
         }
 
-        public async Task<Unit> Handle(FinishProjectCommand request, CancellationToken cancellationToken)
+        public async Task<HttpStatusCode> Handle(FinishProjectCommand request, CancellationToken cancellationToken)
         {
-            var projectToFinish = (await _repository.GetAllAsync()).SingleOrDefault(x => x.Id == request.Id);
+            var projectToFinish = await _repository.GetProjectByIdAsync(request.Id);
+
+            if (projectToFinish.Status == ProjectStatusEnum.Created)
+                return HttpStatusCode.BadRequest;
 
             projectToFinish.Finish();
 
@@ -39,7 +46,7 @@ namespace DevFreela.Application.Commands.Projects
 
             await _repository.FinishProjectAsync(projectToFinish);
 
-            return Unit.Value;
+            return HttpStatusCode.NoContent;
         }
     }
 }

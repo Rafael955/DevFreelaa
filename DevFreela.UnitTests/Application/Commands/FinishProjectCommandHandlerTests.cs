@@ -1,6 +1,7 @@
 ﻿using DevFreela.Application.Commands.Projects;
 using DevFreela.Core.Entities;
 using DevFreela.Core.Repositories;
+using DevFreela.Core.Services;
 using Moq;
 using System.Collections.Generic;
 using System.Threading;
@@ -22,11 +23,14 @@ namespace DevFreela.UnitTests.Application.Commands
 
             var query = "";
             var projectRepositoryMock = new Mock<IProjectRepository>();
+            var paymentServiceMock = new Mock<IPaymentService>();
+
             projectRepositoryMock.Setup(x => x.GetAllAsync(query).Result).Returns(projectToFinishMock);
 
-            var finishProjectCommand = new FinishProjectCommand(0);
+            var finishProjectCommand = new FinishProjectCommand();
+            finishProjectCommand.Id = 0;
 
-            var finishProjectCommandHandler = new FinishProjectCommandHandler(projectRepositoryMock.Object);
+            var finishProjectCommandHandler = new FinishProjectCommandHandler(projectRepositoryMock.Object, paymentServiceMock.Object);
 
             // Act
             await finishProjectCommandHandler.Handle(finishProjectCommand, new CancellationToken());

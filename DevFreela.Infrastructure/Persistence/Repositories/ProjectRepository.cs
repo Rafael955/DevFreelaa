@@ -26,10 +26,14 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
 
         public async Task<List<Project>> GetAllAsync(string query = "")
         {
-            if(query == string.Empty)
-                return await _dbContext.Projects.ToListAsync();
+            List<Project> result;
+
+            if (query == string.Empty)
+                result = await _dbContext.Projects.ToListAsync();
             else
-                return await _dbContext.Projects.Where(x => x.Title.Contains(query)).ToListAsync();
+                result = await _dbContext.Projects.Where(x => x.Title.Contains(query)).ToListAsync();
+
+            return result;
         }
 
         public async Task<ProjectDetailsDTO> GetByIdAsync(int id)
@@ -45,6 +49,11 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
 
                 return result.FirstOrDefault();
             }
+        }
+
+        public async Task<Project> GetProjectByIdAsync(int id)
+        {
+            return await _dbContext.Projects.FindAsync(id);
         }
 
         public async Task<int> CreateProjectAsync(Project project)
