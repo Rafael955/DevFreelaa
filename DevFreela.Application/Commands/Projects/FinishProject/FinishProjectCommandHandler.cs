@@ -33,20 +33,18 @@ namespace DevFreela.Application.Commands.Projects
             if (projectToFinish.Status == ProjectStatusEnum.Created)
                 return HttpStatusCode.BadRequest;
 
-            projectToFinish.Finish();
-
             // Processar Pagamentos - Utilização de microsserviço(API) para pagamentos.
 
             var paymentInfoDto = new PaymentInfoDTO(request.Id, request.CreditCardNumber, request.Cvv, request.ExpiresAt, request.Fullname);
 
-            var result = await _paymentService.ProcessPayment(paymentInfoDto);
+            // Coloca projeto na fila mensageria para processar o pagamento do mesmo.
+            _paymentService.ProcessPayment(paymentInfoDto);
 
-            if (!result)
-                projectToFinish.SetPaymentPending();
+            projectToFinish.SetPaymentPending();
 
             await _repository.FinishProjectAsync(projectToFinish);
 
-            return HttpStatusCode.NoContent;
+            return HttpStatusCode.Accepted;
         }
     }
 }

@@ -39,16 +39,32 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
         public async Task<ProjectDetailsDTO> GetByIdAsync(int id)
         {
             //dapper
-            using (var conn = new SqlConnection(_connectionString))
+            //using (var conn = new SqlConnection(_connectionString))
+            //{
+            //    await conn.OpenAsync();
+
+            //    var script = $"SELECT P.Id, P.Title, P.Description, P.TotalCost, P.StartedAt, P.FinishedAt, U.FullName as ClientFullName, FreelancerFullName FROM Project as P INNER JOIN User as U WHERE P.Id = {id}";
+
+            //    var result = await conn.QueryAsync<ProjectDetailsDTO>(script);
+
+            //    return result.FirstOrDefault();
+            //}
+
+            var project = await _dbContext.Projects.Include(x => x.Client).Include(x => x.Freelancer).SingleOrDefaultAsync(x => x.Id == id);
+
+            var projectDTO = new ProjectDetailsDTO
             {
-                await conn.OpenAsync();
+                Id = project.Id,
+                ClientFullName = project.Client.Fullname,
+                Description = project.Description,
+                FinishedAt = project.FinishedAt,
+                FreelancerFullName = project.Freelancer.Fullname,
+                StartedAt = project.StartedAt,
+                Title = project.Title,
+                TotalCost = project.TotalCost
+            };
 
-                var script = $"SELECT Id, Title, Description, TotalCost, StartedAt, FinishedAt, ClientFullName, FreelancerFullName FROM Project WHERE Id = {id}";
-
-                var result = await conn.QueryAsync<ProjectDetailsDTO>(script);
-
-                return result.FirstOrDefault();
-            }
+            return projectDTO;
         }
 
         public async Task<Project> GetProjectByIdAsync(int id)

@@ -40,11 +40,11 @@ namespace DevFreela.API.Controllers
         // api/projects/3
         [HttpGet("{id:int}")]
         [Authorize(Roles = "client, freelancer")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             // Buscar o projeto
             var query = new GetProjectByIdQuery(id);
-            var project = _mediator.Send(query);
+            var project = await _mediator.Send(query);
 
             if (project == null)
                 return NotFound();
@@ -157,7 +157,7 @@ namespace DevFreela.API.Controllers
             if (result == System.Net.HttpStatusCode.BadRequest)
                 return BadRequest(new { message = "Erro ao finalizar projeto!" });
 
-            return NoContent();
+            return Accepted();
         }
 
         private async Task<ProjectDetailsViewModel> GetProject(int id)
